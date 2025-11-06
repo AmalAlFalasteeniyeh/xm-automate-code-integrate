@@ -1,6 +1,7 @@
 {
   "name": "claude-oauth-hub",
   "version": "1.0.0",
+  "type": "module",
   "description": "OAuth 2.1 + PKCE Hub for Claude Coordination System",
   "main": "server.js",
   "scripts": {

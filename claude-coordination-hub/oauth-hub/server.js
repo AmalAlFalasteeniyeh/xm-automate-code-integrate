@@ -1,13 +1,14 @@
-const express = require('express');
-const session = require('express-session');
-const axios = require('axios');
-const crypto = require('crypto');
-const cors = require('cors');
-const helmet = require('helmet');
-const storage = require('node-persist');
-const pkceChallenge = require('pkce-challenge').default;
+import express from 'express';
+import session from 'express-session';
+import axios from 'axios';
+import crypto from 'crypto';
+import cors from 'cors';
+import helmet from 'helmet';
+import storage from 'node-persist';
+import pkceChallenge from 'pkce-challenge';
+import dotenv from 'dotenv';
 
-require('dotenv').config();
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
