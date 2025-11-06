@@ -73,6 +73,32 @@ const OAUTH_CONFIGS = {
     clientSecret: process.env.DISCORD_CLIENT_SECRET,
     redirectUri: `http://localhost:${PORT}/auth/callback/discord`,
     scope: 'identify bot guilds'
+  },
+  codegen: {
+    name: 'Codegen (Modal Claude)',
+    authUrl: 'https://codegen.com/oauth/authorize',
+    tokenUrl: 'https://codegen.com/oauth/token',
+    clientId: process.env.CODEGEN_CLIENT_ID,
+    clientSecret: process.env.CODEGEN_CLIENT_SECRET,
+    redirectUri: `http://localhost:${PORT}/auth/callback/codegen`,
+    scope: 'read write',
+    apiKey: process.env.CODEGEN_API_KEY // Fallback if OAuth not available
+  },
+  anthropic: {
+    name: 'Claude API (Anthropic)',
+    // Note: Anthropic uses API keys, not OAuth
+    // This is a direct API key integration
+    apiKey: process.env.ANTHROPIC_API_KEY,
+    apiUrl: 'https://api.anthropic.com/v1',
+    authType: 'api_key' // Flag for API key vs OAuth
+  },
+  n8n: {
+    name: 'n8n Workflows',
+    // n8n uses webhook URLs and basic auth
+    webhookUrl: process.env.N8N_WEBHOOK_URL || 'http://n8n:5678',
+    username: process.env.N8N_USER || 'admin',
+    password: process.env.N8N_PASSWORD || 'changeme',
+    authType: 'basic' // Basic auth
   }
 };
 
@@ -94,44 +120,104 @@ app.get('/health', (req, res) => {
 // Home page - Authorization Dashboard
 app.get('/', async (req, res) => {
   const tokens = await storage.getItem('tokens') || {};
+
+  // Check which services are configured (API key or OAuth)
+  const isConfigured = (key, config) => {
+    if (config.authType === 'api_key') {
+      return !!config.apiKey;
+    } else if (config.authType === 'basic') {
+      return !!config.username && !!config.password;
+    } else {
+      return !!tokens[key] || (config.apiKey); // OAuth or API key fallback
+    }
+  };
+
   const html = `
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Claude OAuth Hub</title>
+  <title>Claude OAuth Hub - ALL ACCESS</title>
   <style>
-    body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
-    h1 { color: #333; }
-    .service { border: 1px solid #ddd; padding: 20px; margin: 10px 0; border-radius: 8px; }
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 50px auto; padding: 20px; background: #f5f5f5; }
+    h1 { color: #333; text-align: center; }
+    .tagline { text-align: center; color: #666; margin-bottom: 30px; font-size: 18px; }
+    .service { border: 1px solid #ddd; padding: 20px; margin: 10px 0; border-radius: 8px; background: white; }
     .service.authorized { background-color: #e8f5e9; border-color: #4caf50; }
     .service.unauthorized { background-color: #fff3e0; border-color: #ff9800; }
+    .service.api-key { background-color: #e3f2fd; border-color: #2196f3; }
     button { background-color: #2196f3; color: white; border: none; padding: 10px 20px;
              border-radius: 4px; cursor: pointer; font-size: 14px; }
     button:hover { background-color: #1976d2; }
     .status { font-weight: bold; }
     .authorized .status { color: #4caf50; }
     .unauthorized .status { color: #ff9800; }
+    .api-key .status { color: #2196f3; }
+    .auth-type { font-size: 12px; color: #666; font-style: italic; }
+    .summary { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border: 2px solid #4caf50; }
   </style>
 </head>
 <body>
-  <h1>🏛️ Claude Services Hub</h1>
-  <p>Authorize services for all 4 Claude instances to access.</p>
+  <h1>🏛️ Claude Services Hub - ALL ACCESS 💙</h1>
+  <p class="tagline">All 4 Claudes • All Services • Your Soul 🚀</p>
 
-  ${Object.entries(OAUTH_CONFIGS).map(([key, config]) => `
-    <div class="service ${tokens[key] ? 'authorized' : 'unauthorized'}">
-      <h3>${config.name}</h3>
-      <p class="status">${tokens[key] ? '✅ Authorized' : '❌ Not Authorized'}</p>
-      ${tokens[key] ?
-        `<p><small>Token expires: ${new Date(tokens[key].expires_at).toLocaleString()}</small></p>` :
-        `<button onclick="location.href='/auth/${key}'">Authorize ${config.name}</button>`
+  ${Object.entries(OAUTH_CONFIGS).map(([key, config]) => {
+    const configured = isConfigured(key, config);
+    const authType = config.authType || 'oauth';
+    let statusClass = 'unauthorized';
+    let statusText = '❌ Not Configured';
+    let actionButton = '';
+
+    if (authType === 'api_key') {
+      if (configured) {
+        statusClass = 'api-key';
+        statusText = '✅ API Key Configured';
+      } else {
+        actionButton = '<p><small>Add ANTHROPIC_API_KEY to .env file</small></p>';
       }
-    </div>
-  `).join('')}
+    } else if (authType === 'basic') {
+      if (configured) {
+        statusClass = 'api-key';
+        statusText = '✅ Basic Auth Configured';
+      } else {
+        actionButton = '<p><small>Configure N8N_USER and N8N_PASSWORD in .env</small></p>';
+      }
+    } else {
+      // OAuth
+      if (tokens[key]) {
+        statusClass = 'authorized';
+        statusText = '✅ OAuth Authorized';
+        actionButton = `<p><small>Token expires: ${new Date(tokens[key].expires_at).toLocaleString()}</small></p>`;
+      } else if (config.apiKey) {
+        statusClass = 'api-key';
+        statusText = '✅ API Key Configured (Fallback)';
+      } else if (config.clientId) {
+        actionButton = `<button onclick="location.href='/auth/${key}'">Authorize ${config.name}</button>`;
+      } else {
+        actionButton = `<p><small>Add ${key.toUpperCase()}_CLIENT_ID and SECRET to .env</small></p>`;
+      }
+    }
 
-  <hr>
-  <h3>Status</h3>
-  <p>Authorized services: <strong>${Object.keys(tokens).length}</strong> / ${Object.keys(OAUTH_CONFIGS).length}</p>
-  <p><small>OAuth Hub v1.0.0 | Built for Amal's Claude Coordination System 🏛️</small></p>
+    return `
+    <div class="service ${statusClass}">
+      <h3>${config.name}</h3>
+      <p class="auth-type">Auth: ${authType.toUpperCase()}</p>
+      <p class="status">${statusText}</p>
+      ${actionButton}
+    </div>
+    `;
+  }).join('')}
+
+  <div class="summary">
+    <h3>🎯 Mission Status</h3>
+    <p><strong>Modal Claude:</strong> Codegen container with 8 face swap images</p>
+    <p><strong>Browser Claude:</strong> This OAuth Hub (you're here!)</p>
+    <p><strong>Terminal Claude:</strong> Local Mac with file access</p>
+    <p><strong>Amnesia Claude:</strong> Desktop with ClickUp MCP</p>
+    <hr>
+    <p><strong>Services Ready:</strong> ${Object.entries(OAUTH_CONFIGS).filter(([k, c]) => isConfigured(k, c)).length} / ${Object.keys(OAUTH_CONFIGS).length}</p>
+    <p><strong>Mission:</strong> Xiara Moon → Palestinian Humanitarian Work 💙</p>
+    <p><small>OAuth Hub v2.0.0 - ALL ACCESS | Built for Amal 🏛️</small></p>
+  </div>
 </body>
 </html>
   `;
@@ -364,6 +450,102 @@ app.all('/api/discord/*', async (req, res) => {
     res.status(error.response?.status || 500).json({
       error: error.message,
       service: 'discord'
+    });
+  }
+});
+
+// Codegen API Proxy
+app.all('/api/codegen/*', async (req, res) => {
+  try {
+    const config = OAUTH_CONFIGS.codegen;
+    const path = req.params[0];
+
+    // Try OAuth token first, fallback to API key
+    let authHeader;
+    try {
+      const token = await refreshTokenIfNeeded('codegen');
+      authHeader = `Bearer ${token}`;
+    } catch (error) {
+      // Fallback to API key if OAuth not configured
+      if (config.apiKey) {
+        authHeader = `Bearer ${config.apiKey}`;
+      } else {
+        throw new Error('No Codegen authentication configured');
+      }
+    }
+
+    const response = await axios({
+      method: req.method,
+      url: `https://codegen.com/api/${path}`,
+      headers: {
+        'Authorization': authHeader,
+        'Content-Type': 'application/json'
+      },
+      data: req.body,
+      params: req.query
+    });
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({
+      error: error.message,
+      service: 'codegen'
+    });
+  }
+});
+
+// Claude API (Anthropic) Proxy
+app.all('/api/claude/*', async (req, res) => {
+  try {
+    const config = OAUTH_CONFIGS.anthropic;
+    if (!config.apiKey) {
+      return res.status(500).json({ error: 'Anthropic API key not configured' });
+    }
+
+    const path = req.params[0];
+    const response = await axios({
+      method: req.method,
+      url: `${config.apiUrl}/${path}`,
+      headers: {
+        'x-api-key': config.apiKey,
+        'anthropic-version': '2023-06-01',
+        'Content-Type': 'application/json'
+      },
+      data: req.body,
+      params: req.query
+    });
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({
+      error: error.message,
+      service: 'anthropic'
+    });
+  }
+});
+
+// n8n Webhook/API Proxy
+app.all('/api/n8n/*', async (req, res) => {
+  try {
+    const config = OAUTH_CONFIGS.n8n;
+    const path = req.params[0];
+
+    // Create basic auth header
+    const authString = Buffer.from(`${config.username}:${config.password}`).toString('base64');
+
+    const response = await axios({
+      method: req.method,
+      url: `${config.webhookUrl}/${path}`,
+      headers: {
+        'Authorization': `Basic ${authString}`,
+        'Content-Type': 'application/json'
+      },
+      data: req.body,
+      params: req.query
+    });
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({
+      error: error.message,
+      service: 'n8n'
     });
   }
 });

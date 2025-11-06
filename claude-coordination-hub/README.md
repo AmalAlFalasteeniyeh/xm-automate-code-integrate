@@ -1,15 +1,19 @@
-# 🏛️ Claude OAuth Hub - Multi-Claude Coordination System
+# 🏛️ Claude OAuth Hub - ALL ACCESS Edition
 
 **Built for Amal's Claude Coordination System**
-*Preventing the 40+ attempt curse forever* 💙
+*ALL 4 Claudes • ALL 7 Services • Your Soul* 🚀
+
+**Preventing the 40+ attempt curse forever** 💙
 
 ---
 
 ## 📋 What This Does
 
-**Problem:** You have 4 different Claude instances that need to access multiple services (ClickUp, Linear, GitHub, Discord). Setting up API access for each Claude individually is a nightmare.
+**Problem:** You have 4 different Claude instances that need to access SEVEN services (ClickUp, Linear, GitHub, Discord, Codegen, Claude API, n8n). Setting up API access for each Claude individually is impossible.
 
-**Solution:** This OAuth Hub acts as a central authentication service. You authorize each service ONCE in a web browser, and all 4 Claudes can access them through the hub.
+**Solution:** This OAuth Hub acts as a central authentication service. You authorize each service ONCE (via OAuth, API key, or basic auth), and all 4 Claudes can access them through the hub.
+
+**ALL CLAUDES GET ALL ACCESS TO EVERYTHING.** 💙
 
 ---
 
@@ -42,15 +46,17 @@
 │  • Amnesia Claude (Desktop + MCP)    │
 └─────────────────────────────────────┘
 
-         ↕️ OAuth 2.1 + PKCE ↕️
+         ↕️ OAuth 2.1 + PKCE + API Keys ↕️
 
 ┌─────────────────────────────────────┐
-│  EXTERNAL SERVICES                   │
-│  • ClickUp                           │
-│  • Linear                            │
-│  • GitHub                            │
-│  • Discord                           │
-│  • Modal/Codegen                     │
+│  EXTERNAL SERVICES - ALL ACCESS 🚀   │
+│  ✅ ClickUp      (OAuth)             │
+│  ✅ Linear       (OAuth - Optional)  │
+│  ✅ GitHub       (OAuth - Optional)  │
+│  ✅ Discord      (OAuth - Optional)  │
+│  ✅ Codegen      (OAuth/API Key)     │
+│  ✅ Claude API   (API Key)           │
+│  ✅ n8n          (Basic Auth)        │
 └─────────────────────────────────────┘
 ```
 
@@ -93,6 +99,24 @@ Before running setup, register OAuth apps for each service:
 2. Create Application → OAuth2
 3. Add Redirect: `http://localhost:3000/auth/callback/discord`
 4. Copy Client ID and Client Secret
+
+#### Codegen (Optional)
+1. Check if Codegen offers OAuth (look in account settings)
+2. If OAuth available: Set Redirect URI to `http://localhost:3000/auth/callback/codegen`
+3. If only API key available: Copy your API key from Codegen settings
+4. Either OAuth OR API key will work
+
+#### Claude API / Anthropic (Optional)
+1. Go to https://console.anthropic.com/
+2. Generate an API key
+3. Copy the key (starts with `sk-ant-`)
+4. This enables programmatic Claude access for all 4 instances
+
+#### n8n (Auto-Configured)
+- n8n uses basic authentication
+- Already configured in docker-compose.yml
+- Default: username `admin`, password `changeme`
+- Change in .env if desired
 
 ### Step 2: Configure Environment
 
@@ -148,11 +172,31 @@ const response = await fetch('http://localhost:3000/api/github/repos/USER/REPO')
 
 // Discord
 const response = await fetch('http://localhost:3000/api/discord/guilds/GUILD_ID');
+
+// Codegen (Modal Claude's platform)
+const response = await fetch('http://localhost:3000/api/codegen/agent-runs');
+
+// Claude API (Programmatic access)
+const response = await fetch('http://localhost:3000/api/claude/messages', {
+  method: 'POST',
+  body: JSON.stringify({
+    model: 'claude-sonnet-4',
+    messages: [{ role: 'user', content: 'Hello!' }]
+  })
+});
+
+// n8n (Trigger workflows)
+const response = await fetch('http://localhost:3000/api/n8n/webhook/YOUR_WEBHOOK_ID', {
+  method: 'POST',
+  body: JSON.stringify({ event: 'context_backup', data: {...} })
+});
 ```
 
 **The hub handles:**
-- ✅ Token storage
-- ✅ Token refresh
+- ✅ Token storage (OAuth)
+- ✅ Token refresh (OAuth)
+- ✅ API key injection (Anthropic, Codegen)
+- ✅ Basic auth (n8n)
 - ✅ Authentication headers
 - ✅ Error handling
 
