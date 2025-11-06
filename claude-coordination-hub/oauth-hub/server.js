@@ -45,7 +45,8 @@ const OAUTH_CONFIGS = {
     clientId: process.env.CLICKUP_CLIENT_ID,
     clientSecret: process.env.CLICKUP_CLIENT_SECRET,
     redirectUri: `http://localhost:${PORT}/auth/callback/clickup`,
-    scope: ''
+    scope: '',
+    supportsPKCE: false // ClickUp does not support PKCE
   },
   linear: {
     name: 'Linear',
@@ -54,7 +55,8 @@ const OAUTH_CONFIGS = {
     clientId: process.env.LINEAR_CLIENT_ID,
     clientSecret: process.env.LINEAR_CLIENT_SECRET,
     redirectUri: `http://localhost:${PORT}/auth/callback/linear`,
-    scope: 'read,write'
+    scope: 'read,write',
+    supportsPKCE: true // Linear supports PKCE
   },
   github: {
     name: 'GitHub',
@@ -63,7 +65,8 @@ const OAUTH_CONFIGS = {
     clientId: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
     redirectUri: `http://localhost:${PORT}/auth/callback/github`,
-    scope: 'repo,read:org'
+    scope: 'repo,read:org',
+    supportsPKCE: true // GitHub supports PKCE
   },
   discord: {
     name: 'Discord',
@@ -72,7 +75,8 @@ const OAUTH_CONFIGS = {
     clientId: process.env.DISCORD_CLIENT_ID,
     clientSecret: process.env.DISCORD_CLIENT_SECRET,
     redirectUri: `http://localhost:${PORT}/auth/callback/discord`,
-    scope: 'identify bot guilds'
+    scope: 'identify bot guilds',
+    supportsPKCE: true // Discord supports PKCE
   },
   codegen: {
     name: 'Codegen (Modal Claude)',
@@ -82,7 +86,8 @@ const OAUTH_CONFIGS = {
     clientSecret: process.env.CODEGEN_CLIENT_SECRET,
     redirectUri: `http://localhost:${PORT}/auth/callback/codegen`,
     scope: 'read write',
-    apiKey: process.env.CODEGEN_API_KEY // Fallback if OAuth not available
+    apiKey: process.env.CODEGEN_API_KEY, // Fallback if OAuth not available
+    supportsPKCE: true // Assuming Codegen supports PKCE
   },
   anthropic: {
     name: 'Claude API (Anthropic)',
@@ -233,22 +238,27 @@ app.get('/auth/:service', (req, res) => {
     return res.status(400).json({ error: 'Invalid service' });
   }
 
-  // Generate PKCE challenge
-  const { code_verifier, code_challenge } = generatePKCE();
   const state = crypto.randomBytes(32).toString('hex');
 
-  // Store PKCE verifier and state
-  pkceStore.set(state, { code_verifier, service });
-
-  // Build authorization URL
+  // Build authorization URL parameters
   const params = new URLSearchParams({
     client_id: config.clientId,
     redirect_uri: config.redirectUri,
     response_type: 'code',
-    state: state,
-    code_challenge: code_challenge,
-    code_challenge_method: 'S256'
+    state: state
   });
+
+  // Conditionally add PKCE parameters if supported
+  let code_verifier = null;
+  if (config.supportsPKCE !== false) { // Default to true if not specified
+    const pkce = generatePKCE();
+    code_verifier = pkce.code_verifier;
+    params.append('code_challenge', pkce.code_challenge);
+    params.append('code_challenge_method', 'S256');
+  }
+
+  // Store state and optionally code_verifier
+  pkceStore.set(state, { code_verifier, service, usesPKCE: config.supportsPKCE !== false });
 
   if (config.scope) {
     params.append('scope', config.scope);
@@ -278,14 +288,20 @@ app.get('/auth/callback/:service', async (req, res) => {
 
   try {
     // Exchange code for token
-    const tokenResponse = await axios.post(config.tokenUrl, {
+    const tokenPayload = {
       client_id: config.clientId,
       client_secret: config.clientSecret,
       code: code,
       redirect_uri: config.redirectUri,
-      grant_type: 'authorization_code',
-      code_verifier: pkceData.code_verifier
-    }, {
+      grant_type: 'authorization_code'
+    };
+
+    // Only include code_verifier if PKCE was used
+    if (pkceData.usesPKCE && pkceData.code_verifier) {
+      tokenPayload.code_verifier = pkceData.code_verifier;
+    }
+
+    const tokenResponse = await axios.post(config.tokenUrl, tokenPayload, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
 
@@ -367,7 +383,7 @@ app.all('/api/clickup/*', async (req, res) => {
       method: req.method,
       url: `https://api.clickup.com/api/v2/${path}`,
       headers: {
-        'Authorization': token,
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
       data: req.body,
