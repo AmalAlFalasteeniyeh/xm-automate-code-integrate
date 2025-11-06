@@ -1,0 +1,86 @@
+{
+  "name": "Context Backup & Pickup Codes",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 2
+            }
+          ]
+        }
+      },
+      "name": "Every 2 Hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Generate pickup code timestamp\nconst now = new Date();\nconst timestamp = now.toISOString().replace(/[-:]/g, '').split('.')[0];\nconst pickupCode = `CONTINUE-AUTOMATED-BACKUP-${timestamp}`;\n\nconst contextPackage = {\n  pickup_code: pickupCode,\n  timestamp: now.toISOString(),\n  generated_by: 'n8n-automation',\n  system_status: 'healthy',\n  message: `🏛️ Automated Context Backup\\n\\nPickup Code: ${pickupCode}\\nTime: ${now.toLocaleString()}\\n\\nThis is an automated backup to prevent context loss.\\nAll Claude instances can resume from this point.`\n};\n\nreturn [{json: contextPackage}];"
+      },
+      "name": "Generate Pickup Code",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://oauth-hub:3000/api/clickup/task/{{$env.CLICKUP_STATUS_TASK_ID}}/comment",
+        "options": {},
+        "bodyParametersJson": "={\n  \"comment_text\": \"{{$json.message}}\",\n  \"notify_all\": false\n}"
+      },
+      "name": "Save to ClickUp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://oauth-hub:3000/api/github/repos/{{$env.GITHUB_REPO}}/issues",
+        "options": {},
+        "bodyParametersJson": "={\n  \"title\": \"Context Backup: {{$json.pickup_code}}\",\n  \"body\": \"{{$json.message}}\",\n  \"labels\": [\"context-backup\", \"automated\"]\n}"
+      },
+      "name": "Backup to GitHub",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [650, 450]
+    }
+  ],
+  "connections": {
+    "Every 2 Hours": {
+      "main": [
+        [
+          {
+            "node": "Generate Pickup Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Pickup Code": {
+      "main": [
+        [
+          {
+            "node": "Save to ClickUp",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Backup to GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "id": "context-backup"
+}
