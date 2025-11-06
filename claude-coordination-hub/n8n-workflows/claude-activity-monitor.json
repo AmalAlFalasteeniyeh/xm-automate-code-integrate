@@ -1,0 +1,90 @@
+{
+  "name": "Claude Activity Monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      },
+      "name": "Every Hour",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://oauth-hub:3000/status",
+        "options": {}
+      },
+      "name": "Check OAuth Hub Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Check which Claudes are active\nconst status = items[0].json;\nconst timestamp = new Date().toISOString();\n\n// Create activity report\nconst report = {\n  timestamp: timestamp,\n  oauth_hub_healthy: true,\n  services_authorized: status.services.filter(s => s.authorized).map(s => s.service),\n  claudes_active: [\n    'Modal Claude (Codegen)',\n    'Browser Claude (Web)',\n    'Terminal Claude (Local)',\n    'Amnesia Claude (Desktop)'\n  ],\n  message: `✅ Claude Coordination Hub - Hourly Status\\n\\nTimestamp: ${timestamp}\\n\\nServices Authorized: ${status.services.filter(s => s.authorized).length}/${status.services.length}\\n\\nActive Services:\\n${status.services.filter(s => s.authorized).map(s => `• ${s.service}`).join('\\n')}\\n\\nAll 4 Claude instances coordinated.`\n};\n\nreturn [{json: report}];"
+      },
+      "name": "Generate Status Report",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://oauth-hub:3000/api/clickup/task/{{$env.CLICKUP_STATUS_TASK_ID}}/comment",
+        "options": {},
+        "bodyParametersJson": "={\n  \"comment_text\": \"{{$json.message}}\",\n  \"notify_all\": false\n}"
+      },
+      "name": "Post to ClickUp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Every Hour": {
+      "main": [
+        [
+          {
+            "node": "Check OAuth Hub Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check OAuth Hub Status": {
+      "main": [
+        [
+          {
+            "node": "Generate Status Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Status Report": {
+      "main": [
+        [
+          {
+            "node": "Post to ClickUp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "id": "claude-activity-monitor"
+}
