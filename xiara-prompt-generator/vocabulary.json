@@ -1,0 +1,544 @@
+{
+  "base": {
+    "fixed_description": "Ultra-realistic photograph of Xiara Moon, a stunning 24-year-old with sun-kissed cheeks, radiant skin, long brown wavy beach hair with hazel brown eyes, full lips, natural long lashes, wearing precise-winged cat eyeliner. She is 5'4\" with curves that emphasize her hourglass shape.",
+    "variable_descriptors": {
+      "body": ["tight", "toned", "athletic", "sculpted", "fit"],
+      "curves": ["curvy", "seductive", "striking", "sensual", "hourglass"],
+      "chest": ["busty", "medium-sized", "voluptuous", "well-proportioned"],
+      "style": ["flirty", "suggestive", "sensual", "playful", "seductive"],
+      "coverage": ["minimal", "exposed", "revealing", "strategic"],
+      "hair_state": ["tousled", "flowing", "windswept", "cascading"],
+      "decolletage": ["cleavage", "décolletage", "neckline"]
+    }
+  },
+
+  "scene_styles": {
+    "High Fashion Editorial": {
+      "technical": [
+        "Hasselblad medium format",
+        "f/2.8 aperture",
+        "Dutch angle low position",
+        "tracking movement",
+        "4K resolution"
+      ],
+      "subject_action": [
+        "Statuesque presence",
+        "editorial features",
+        "power stride",
+        "dress manipulation",
+        "hair in motion"
+      ],
+      "mood": [
+        "Fashion confidence",
+        "editorial intensity",
+        "subtle attitude",
+        "inner power"
+      ],
+      "fashion": [
+        "Avant-garde gown",
+        "flowing silk",
+        "architectural design",
+        "statement accessories",
+        "dramatic elements"
+      ],
+      "enhancement": [
+        "Skin texture reality",
+        "fabric physics",
+        "movement authenticity",
+        "professional finish"
+      ]
+    },
+
+    "Luxury/Lifestyle": {
+      "technical": [
+        "Premium digital capture",
+        "shallow depth f/1.4",
+        "eye-level tracking",
+        "smooth movement",
+        "natural perspective",
+        "cinematic ratio"
+      ],
+      "subject_action": [
+        "Graceful movement sequence: turning from cafe table",
+        "rising elegantly",
+        "bag collection motion",
+        "natural walking initiation",
+        "continuous fluid movement",
+        "natural gesture flow"
+      ],
+      "mood": [
+        "Authentic joy layers",
+        "natural smile",
+        "genuine engagement",
+        "warm presence",
+        "social comfort",
+        "aspirational yet approachable"
+      ],
+      "fashion": [
+        "Luxury casual ensemble",
+        "designer basics",
+        "premium fabrication",
+        "perfect fit",
+        "curated accessories",
+        "brand alignment"
+      ],
+      "enhancement": [
+        "Lifestyle authenticity",
+        "natural light interaction",
+        "premium finish",
+        "social media optimization"
+      ]
+    },
+
+    "Professional Innovation": {
+      "technical": [
+        "High-end corporate capture",
+        "sharp focus priority",
+        "contemporary framing",
+        "professional perspective",
+        "executive quality",
+        "relaxed corporate"
+      ],
+      "subject_action": [
+        "Confident stance",
+        "executive presence",
+        "professional engagement",
+        "authority projection",
+        "subtle movement",
+        "space command"
+      ],
+      "mood": [
+        "Approachable authority",
+        "trustworthy presence",
+        "industry leadership",
+        "authentic confidence"
+      ],
+      "fashion": [
+        "Premium office attire",
+        "corporate luxury",
+        "modern elements",
+        "professional sophistication"
+      ],
+      "enhancement": [
+        "Corporate polish",
+        "professional finish",
+        "executive quality",
+        "leadership presence"
+      ]
+    },
+
+    "Artistic/Creative": {
+      "technical": [
+        "Artistic capture",
+        "creative framing",
+        "experimental angle",
+        "innovation focus",
+        "unique perspective"
+      ],
+      "subject_action": [
+        "Artistic movement",
+        "creative energy",
+        "expressive motion",
+        "innovation display"
+      ],
+      "mood": [
+        "Bold experimental",
+        "unique unexpected",
+        "audience shock value",
+        "intimately real"
+      ],
+      "fashion": [
+        "Bold risky styling",
+        "unique costume pieces",
+        "suggestive statement wear",
+        "artistic expression"
+      ],
+      "enhancement": [
+        "Creative authenticity",
+        "artistic finish",
+        "experimental quality",
+        "unique presence"
+      ]
+    }
+  },
+
+  "camera": {
+    "frames": [
+      "Extreme Close-Up (ECU)",
+      "Close-Up (CU)",
+      "Medium Close-Up (MCU)",
+      "Medium Shot (MS)",
+      "Medium Long Shot (MLS)",
+      "Long Shot (LS)",
+      "Very Long Shot (VLS)",
+      "Wide Shot",
+      "Dutch Angle Frame",
+      "Over-the-Shoulder Shot",
+      "Point-of-View (POV) Shot",
+      "Profile Frame",
+      "Three-Quarter Turn Frame",
+      "Environmental Portrait Frame",
+      "Dynamic Movement Frame"
+    ],
+    "angles": [
+      "Eye Level",
+      "High Angle",
+      "Low Angle",
+      "Bird's Eye View",
+      "Worm's Eye View",
+      "Dutch Angle (Tilted)",
+      "Over-the-Shoulder",
+      "Point-of-View (POV)",
+      "Aerial View",
+      "Three-Quarter View",
+      "Profile View",
+      "Front View",
+      "Upward Tilt",
+      "Downward Tilt",
+      "Dynamic Angle"
+    ],
+    "types": [
+      "DSLR Full Frame",
+      "Medium Format Digital",
+      "Hasselblad Digital",
+      "Sony Alpha Series",
+      "Canon R Series",
+      "Leica M Series",
+      "Film 35mm",
+      "Digital Medium Format",
+      "Cinema Camera",
+      "iPhone Pro Camera (for lifestyle)"
+    ]
+  },
+
+  "lighting": [
+    "Natural Daylight (Golden Hour)",
+    "Soft Diffused Sunlight",
+    "Blue Hour Ambient",
+    "Studio Three-Point Lighting",
+    "Rembrandt Lighting",
+    "Butterfly Lighting",
+    "Rim Lighting",
+    "Backlight/Hair Light",
+    "Low-Key Dramatic",
+    "High-Key Bright",
+    "Moody Shadow Play",
+    "Candlelight Intimacy",
+    "Window Light Natural",
+    "Soft Box Diffusion",
+    "Cinematic Flare"
+  ],
+
+  "cinematography": [
+    "Classic Hollywood",
+    "Film Noir",
+    "Fashion Editorial",
+    "Vogue Editorial",
+    "Instagram Aesthetic",
+    "Commercial Clean",
+    "Ethereal Dreamlike",
+    "Intimate Boudoir",
+    "Fine Art Portrait",
+    "High Fashion Editorial",
+    "Lifestyle Candid"
+  ],
+
+  "mood": [
+    "Confident & Powerful",
+    "Soft & Sensual",
+    "Playful & Flirty",
+    "Mysterious & Alluring",
+    "Professional & Polished",
+    "Elegant & Sophisticated",
+    "Bold & Dramatic",
+    "Romantic & Dreamy",
+    "Natural & Authentic",
+    "Glamorous & Luxurious",
+    "Sultry & Seductive",
+    "Chic & Stylish",
+    "Warm & Inviting"
+  ],
+
+  "facial_expressions": [
+    "Subtle Smirk",
+    "Confident Gaze",
+    "Gentle Natural Smile",
+    "Coy Side Glance",
+    "Flirtatious Smile",
+    "Playful Wink",
+    "Bedroom eyes with parted lips",
+    "Looking away but aware of camera",
+    "Confident smirk knowing the effect",
+    "High Fashion Pout",
+    "Magazine Cover Gaze",
+    "Teasing Look Back",
+    "Intense Direct Gaze",
+    "Candid Mid-Laugh"
+  ],
+
+  "poses": [
+    "Contrapposto Classic",
+    "Power Stance",
+    "Casual Hip Lean",
+    "S-Curve Fashion",
+    "Three-Quarter Turn",
+    "Runway Walk",
+    "Edge of Seat Lean",
+    "Relaxed Lounge",
+    "Mid-Walk Capture",
+    "Graceful Turn",
+    "Magazine Lean",
+    "Fashion Forward",
+    "Gentle Recline",
+    "Artistic Curve",
+    "Mirror Interaction",
+    "Wall Lean"
+  ],
+
+  "actions": [
+    "Walking Confidently",
+    "Graceful Turn",
+    "Hair Toss Motion",
+    "Dress Swish",
+    "Fabric Play",
+    "Accessory Adjust",
+    "Mirror Check",
+    "Coffee Sip",
+    "Sunglasses Adjust",
+    "Hair Sweep",
+    "Urban Explore",
+    "Dance Twirl",
+    "Running fingers through wet hair",
+    "Adjusting thigh-high stocking",
+    "Looking over bare shoulder",
+    "Pulling at clothing as if removing it"
+  ],
+
+  "locations": [
+    "City Rooftop",
+    "Urban Garden",
+    "Cafe Terrace",
+    "Beach Sunset",
+    "Modern Gallery",
+    "Industrial Loft",
+    "Luxury Hotel",
+    "Designer Store",
+    "Private Studio",
+    "Luxury Suite",
+    "Designer Bedroom",
+    "Executive Office",
+    "Fashion Atelier",
+    "High-End Gym",
+    "White Studio",
+    "Fashion Runway"
+  ],
+
+  "scenes": [
+    "Golden Hour Sunset",
+    "Blue Hour Dawn",
+    "Candlelit Interior",
+    "Neon-Lit Street",
+    "Window Light Interior",
+    "Dressing Room Mirror",
+    "Luxury Hotel Lobby",
+    "Private Beach Scene",
+    "Rooftop Pool Setting",
+    "Fashion Week Runway",
+    "Designer Home Interior",
+    "Urban Street Corner",
+    "Spa Retreat"
+  ],
+
+  "outfits": [
+    "Oversized Cashmere Sweater & Leather Leggings",
+    "High-End Denim & Silk Blouse",
+    "Floor-Length Silk Gown",
+    "Sequined Cocktail Dress",
+    "Designer One-Piece",
+    "High-Fashion Bikini",
+    "Street Style Statement",
+    "Runway Statement Piece",
+    "Sultry Yet Sophisticated",
+    "Date Night Perfection",
+    "Premium Athleisure Ensemble",
+    "Avant-Garde Design"
+  ],
+
+  "statement_tops": [
+    "Asymmetrical one-shoulder draped silk top with waterfall detail",
+    "Cut-out harness bodice with geometric negative space",
+    "Sheer mesh corset top with built-in boning and crystals",
+    "Liquid metal halter with exaggerated collar wings",
+    "Deconstructed blazer crop with exposed seams",
+    "Transparent organza button-up with embroidered constellations",
+    "Backless wrap top with extended sleeve drama",
+    "Draped cowl-neck backless with liquid silk",
+    "Oversized deconstructed shirt falling off one shoulder",
+    "Crystal-embellished bandeau with dangling chains"
+  ],
+
+  "statement_bottoms": [
+    "Asymmetrical wrap skirt with thigh-high slit",
+    "Deconstructed denim with strategic cutouts",
+    "Leather micro-mini with metal hardware",
+    "Sculptural structured skirt with architectural volume",
+    "Harness pants with visible strapping over sheer base",
+    "Metallic pleated skirt with knife-edge pleats",
+    "Cut-out leather pants with geometric negative space",
+    "Transparent mesh pants over contrasting underwear",
+    "Latex pencil skirt with back zipper detail",
+    "Extreme low-rise with visible hip cutouts"
+  ],
+
+  "statement_dresses": [
+    "Sculptural one-shoulder gown with dramatic asymmetry",
+    "Cut-out bodycon dress with strategic negative space panels",
+    "Sheer mesh overlay dress with geometric tape placement",
+    "Liquid metal slip dress with cowl neckline to navel",
+    "Corset mini dress with built-in boning and lace-up back",
+    "Transparent lace dress with strategic floral placement",
+    "Draped goddess gown with one exposed leg and shoulder",
+    "Backless halter dress plunging to lower back",
+    "Vinyl wrap dress with high-gloss finish",
+    "Chainmail mini dress with medieval edge"
+  ],
+
+  "suggestive_combinations": [
+    "Oversized men's dress shirt barely buttoned, falling off one shoulder, nothing underneath",
+    "Sheer robe tied loosely over matching lingerie set",
+    "Wet white tank top clinging to skin over no bra",
+    "Blazer with nothing underneath held closed by one hand",
+    "Transparent slip dress over barely-there thong",
+    "Boyfriend's oversized hoodie and thigh-highs, nothing else visible",
+    "Silk robe falling open caught mid-motion",
+    "Button-up shirt tied at waist with underboob reveal",
+    "Crop top riding up revealing underboob",
+    "Loosely wrapped towel threatening to fall",
+    "Sheet wrapped around body, barely covering",
+    "Leather jacket and heels, nothing else visible in frame"
+  ],
+
+  "tease_framework": {
+    "strategic_styling": [
+      "Hair covering breasts like natural censorship",
+      "Arm placement suggesting nudity while covered",
+      "Strategic shadow play hiding and revealing",
+      "Steam/mist creating mysterious coverage",
+      "Furniture blocking key areas artfully",
+      "Sheet placement barely maintaining modesty",
+      "Lighting creating silhouette showing curves only",
+      "Fabric caught mid-fall frozen moment",
+      "Hand placement suggesting exposure while covering",
+      "Hair falling at perfect strategic points",
+      "Leg crossed hiding while revealing thigh",
+      "Backlit transparency showing form through fabric"
+    ],
+    "atmosphere": [
+      "Fresh from shower with wet hair and dewy skin",
+      "Morning after in rumpled sheets",
+      "Getting dressed caught mid-routine",
+      "Hotel room with city lights background",
+      "Silk sheets tangled around body",
+      "Candlelit bathroom with steam",
+      "Rain-soaked clothing clinging",
+      "Bed with messy hair just waking aesthetic",
+      "Mirror vanity getting ready scene",
+      "Closet trying on outfits scene",
+      "Window silhouette with curtain breeze",
+      "Firelight shadows dancing on skin",
+      "Rooftop night with city backdrop",
+      "Bedroom doorway leaning suggestively"
+    ],
+    "almost_moments": [
+      "Strap draping off shoulder naturally",
+      "Zipper half-down suggesting undressing",
+      "Button undone just one too many",
+      "Towel caught just before falling",
+      "Sheet pulled up just enough coverage",
+      "Clothing slipping in candid moment",
+      "Hair placement perfect accident",
+      "Shadow falling exactly right",
+      "Leg angle creating visual barrier",
+      "Hand blocking the reveal"
+    ],
+    "expressions": [
+      "Bedroom eyes with parted lips",
+      "Looking away but aware of camera",
+      "Confident smirk knowing the effect",
+      "Innocent but knowing contradiction",
+      "Vulnerable yet powerful duality",
+      "Playful tease with slight smile",
+      "Intense eye contact challenging viewer",
+      "Caught off-guard natural moment",
+      "Deliberate seduction full awareness",
+      "Post-passion glow disheveled beauty"
+    ]
+  },
+
+  "xiara_energy_words": [
+    "Suggestive not explicit",
+    "Implied not shown",
+    "Strategic coverage",
+    "Artfully positioned",
+    "Barely concealed",
+    "Tastefully provocative",
+    "Seductively modest",
+    "Suggestively clothed",
+    "Almost revealing",
+    "Teasing exposure",
+    "Strategic placement",
+    "Artful coverage",
+    "Carefully positioned",
+    "Just enough fabric",
+    "Precisely angled",
+    "Deliberately placed",
+    "Expertly framed",
+    "Soft intimate lighting",
+    "Boudoir atmosphere",
+    "Golden hour warmth",
+    "Candlelit ambiance",
+    "Moody shadows"
+  ],
+
+  "quality_rules": {
+    "always_include": [
+      "Asymmetrical",
+      "Cut-out / negative space",
+      "Sculptural / architectural",
+      "Deconstructed",
+      "Draped / wrapped",
+      "Sheer / transparent",
+      "Metallic / liquid metal",
+      "Harness / bondage-inspired",
+      "Oversized / exaggerated",
+      "Strategic exposure"
+    ],
+    "never_use": [
+      "Basic",
+      "Classic",
+      "Simple",
+      "Casual",
+      "Everyday",
+      "Plain"
+    ]
+  },
+
+  "content_boundaries": {
+    "never": [
+      "Full nudity",
+      "Explicit sexual acts",
+      "Genitalia visible",
+      "Nipples fully exposed",
+      "Pornographic positioning",
+      "Crude language"
+    ],
+    "always_maintain": [
+      "High fashion aesthetic",
+      "Artistic framing",
+      "Luxury positioning",
+      "Sophisticated sensuality",
+      "Strategic mystery",
+      "Class with sass"
+    ]
+  }
+}
